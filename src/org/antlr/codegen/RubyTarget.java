@@ -37,7 +37,7 @@ public class RubyTarget
     {
         literal = literal.substring(1, literal.length() - 1);
 
-        String result = "?";
+        String result = "";
 
         if (literal.equals("\\")) {
             result += "\\\\";
