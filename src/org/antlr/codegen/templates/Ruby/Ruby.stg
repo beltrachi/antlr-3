@@ -657,9 +657,9 @@ wildcardCharListLabel(label, elementIndex)::=
 ruleRef(rule,label,elementIndex,args,scope) ::=
 <<
 <if(label)>
-_<label> = <rule>(<args; separator=", ">)<\n>
+_<label> = <rule.name>(<args; separator=", ">)<\n>
 <else>
-<rule>(<args; separator=", ">)<\n>
+<rule.name>(<args; separator=", ">)<\n>
 <endif>
 >>
 
@@ -685,13 +685,13 @@ lexerRuleRef(rule,label,args,elementIndex,scope)::=
 _<label>_start_<elementIndex> = @input.index
 _<label>_line_<elementIndex> = @input.line
 _<label>_pos_<elementIndex> = @input.column
-match_<rule>(<args; separator=", ">)
+match_<rule.name>(<args; separator=", ">)
 _<label> = Token.new(:invalid, 0,
                      _<label>_line_<elementIndex>,
                      _<label>_pos_<elementIndex>,
                      @input.substring(_<label>_start_<elementIndex>, @input.index - 1), nil)
 <else>
-match_<rule>(<args; separator=", ">)
+match_<rule.name>(<args; separator=", ">)
 <endif>
 >>
 
