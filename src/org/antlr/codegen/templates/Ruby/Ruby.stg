@@ -162,7 +162,7 @@ class <name>
         def consume
            look_ahead(1) # force a read from the input if necessary
            @column = @column + 1
-           if @buffer[@index] == "\n"
+           if @buffer[@index] == ?\n
                 @line = @line + 1
                 @column = 0
            end
@@ -235,7 +235,7 @@ class <name>
         name = pair[0]
         index = pair[1] + 3 # hardcoded for now... no way to get this value from ANTLR
 
-        if name[0] == "'"
+        if name[0] == ?'
             hash[:"T#{index}"] = index
         else
             hash[:"#{name}"] = index
@@ -578,9 +578,9 @@ list_<label> \<\< _<elem>
 charRef(char,label)::=
 <<
 <if(label)>
-_<label> = '<char>'<\n>
+_<label> = <char><\n>
 <endif>
-match('<char>') #found!
+match(<char>)
 >>
 
 /** match a character range */
@@ -657,9 +657,9 @@ wildcardCharListLabel(label, elementIndex)::=
 ruleRef(rule,label,elementIndex,args,scope) ::=
 <<
 <if(label)>
-_<label> = <rule.name>(<args; separator=", ">)<\n>
+_<label> = <rule>(<args; separator=", ">)<\n>
 <else>
-<rule.name>(<args; separator=", ">)<\n>
+<rule>(<args; separator=", ">)<\n>
 <endif>
 >>
 
@@ -685,13 +685,13 @@ lexerRuleRef(rule,label,args,elementIndex,scope)::=
 _<label>_start_<elementIndex> = @input.index
 _<label>_line_<elementIndex> = @input.line
 _<label>_pos_<elementIndex> = @input.column
-match_<rule.name>(<args; separator=", ">)
+match_<rule>(<args; separator=", ">)
 _<label> = Token.new(:invalid, 0,
                      _<label>_line_<elementIndex>,
                      _<label>_pos_<elementIndex>,
                      @input.substring(_<label>_start_<elementIndex>, @input.index - 1), nil)
 <else>
-match_<rule.name>(<args; separator=", ">)
+match_<rule>(<args; separator=", ">)
 <endif>
 >>
 
@@ -858,7 +858,7 @@ dfaEdgeSwitch(labels, targetState)::=
 <if(PARSER)>
 when <labels:{:<it>}; separator=","><\n>
 <else>
-when <labels:{'<it>'}; separator=","><\n>
+when <labels:{<it>}; separator=","><\n>
 <endif>
     <targetState>
 >>
@@ -965,7 +965,7 @@ evalSynPredicate(pred,description)::= "<pred>()"
 lookaheadTest(atom,k,atomAsInt)::=
 <<
 <if(LEXER)>
-look_ahead<decisionNumber>_<stateNumber> == '<atom>'
+look_ahead<decisionNumber>_<stateNumber> == <atom>
 <else>
 look_ahead<decisionNumber>_<stateNumber> == :<atom>
 <endif>
@@ -978,7 +978,7 @@ look_ahead<decisionNumber>_<stateNumber> == :<atom>
 isolatedLookaheadTest(atom,k,atomAsInt) ::=
 <<
 <if(LEXER)>
-<LA(k)> == '<atom>'
+<LA(k)> == <atom>
 <else>
 <LA(k)> == :<atom>
 <endif>
@@ -990,7 +990,7 @@ isolatedLookaheadTest(atom,k,atomAsInt) ::=
 lookaheadRangeTest(lower,upper,k,rangeNumber,lowerAsInt,upperAsInt)::=
 <<
 <if(LEXER)>
-(look_ahead<decisionNumber>_<stateNumber> \>= '<lower>' && look_ahead<decisionNumber>_<stateNumber> \<= '<upper>')
+(look_ahead<decisionNumber>_<stateNumber> \>= <lower> && look_ahead<decisionNumber>_<stateNumber> \<= <upper>)
 <else>
 (TOKENS[look_ahead<decisionNumber>_<stateNumber>] \>= <lowerAsInt> && TOKENS[look_ahead<decisionNumber>_<stateNumber>] \<= <upperAsInt>)
 <endif>
@@ -1000,7 +1000,7 @@ lookaheadRangeTest(lower,upper,k,rangeNumber,lowerAsInt,upperAsInt)::=
 isolatedLookaheadRangeTest(lower,upper,k,rangeNumber,lowerAsInt,upperAsInt) ::=
 <<
 <if(LEXER)>
-(<LA(k)> \>= '<lower>' && <LA(k)> \<= '<upper>')
+(<LA(k)> \>= <lower> && <LA(k)> \<= <upper>)
 <else>
 (TOKENS[<LA(k)>] \>= <lowerAsInt> && TOKENS[<LA(k)>] \<= <upperAsInt>)
 <endif>
